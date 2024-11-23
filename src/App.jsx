@@ -1,17 +1,22 @@
 import { Route, Routes } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
-// Pages
 import SignUp from "./pages/SignUp";
 import VerifyEmail from "./pages/VerifyEmail";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import Profile from "./pages/Profile";
 import { useEffect, useState } from "react";
 import useAuthStore from "./zustand/authStore";
 import ClipLoader from "react-spinners/ClipLoader";
 import NewAppointment from "./pages/NewAppointment";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import Admin from "./pages/Admin";
+import AddDoctor from "./pages/AddDoctor";
+import EditModal from "./pages/EditModal";
+import ChatWindow from "./components/ChatWindow";
+import DoctorList from "./pages/DoctorList";
 
 function App() {
   const { checkToken } = useAuthStore();
@@ -44,6 +49,11 @@ function App() {
         <Route path="/verify-email" Component={VerifyEmail} />
         <Route path="/forgot-password" Component={ForgotPassword} />
         <Route path="/reset-password" Component={ResetPassword} />
+        <Route path="/profile" Component={Profile} />
+        <Route path="/admin" Component={Admin} />
+        <Route path="/add-doctor" Component={AddDoctor} />
+        <Route path="/update-modal" Component={EditModal} />
+        <Route path="/doctors-chat" Component={DoctorList} />
       </Routes>
       <Toaster />
     </>

@@ -33,7 +33,7 @@ const Login = () => {
   const [errors, setErrors] = useState({});
 
   // Handle input changes
-  const handleChange = e => {
+  const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -61,7 +61,7 @@ const Login = () => {
     return newErrors;
   };
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {

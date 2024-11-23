@@ -10,7 +10,7 @@ const ForgotPassword = () => {
   const navigate = useNavigate();
 
   // Handle input changes
-  const handleChange = e => {
+  const handleChange = (e) => {
     setEmail(e.target.value);
   };
 
@@ -22,7 +22,7 @@ const ForgotPassword = () => {
   };
 
   // Handle form submission
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const emailError = validateEmail();
 

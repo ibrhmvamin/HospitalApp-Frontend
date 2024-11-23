@@ -29,7 +29,7 @@ const NewAppointment = () => {
   }, [token]);
 
   // Function to format the date to dd-MM-yyyy HH:mm
-  const formatDateTime = datetime => {
+  const formatDateTime = (datetime) => {
     const date = new Date(datetime);
     const day = String(date.getDate()).padStart(2, "0");
     const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
@@ -39,39 +39,39 @@ const NewAppointment = () => {
     return `${day}-${month}-${year} ${hours}:${minutes}`;
   };
 
-  const handleAppointmentSubmit = async e => {
+  const handleAppointmentSubmit = async (e) => {
     e.preventDefault();
 
-    // Format the appointment time
-    const formattedTime = formatDateTime(appointmentTime);
+    if (!selectedDoctorId || !appointmentTime) {
+      toast.error("Please select a doctor and provide an appointment time.");
+      return;
+    }
 
-    // Prepare payload
     const appointmentData = {
-      startTime: formattedTime,
+      startTime: appointmentTime, // Use the ISO 8601 format from the datetime-local input
       doctorId: selectedDoctorId,
     };
 
-    console.log(appointmentData);
-
     try {
-      // Send the POST request to backend
       await axios.post(
         "http://localhost:5274/api/Appointment",
         appointmentData,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
+          "Content-Type": "application/json", // Ensure JSON content type
         }
       );
       navigate("/");
       toast.success("Appointment successfully created!");
     } catch (error) {
-      console.error("Error creating appointment", error);
+      console.error("Error creating appointment:", error);
 
-      const { message } = error.response.data;
-      if (message) toast.error(`Error: ${message}`);
-      else toast.error(error.response.data.title);
+      const errorData = error.response?.data || {};
+      const errorMessage =
+        errorData.message ||
+        errorData.title ||
+        "An error occurred. Please try again.";
+      toast.error(errorMessage);
     }
   };
 
@@ -88,11 +88,11 @@ const NewAppointment = () => {
             </label>
             <select
               value={selectedDoctorId}
-              onChange={e => setSelectedDoctorId(e.target.value)}
+              onChange={(e) => setSelectedDoctorId(e.target.value)}
               className="w-full bg-gray-700 text-white p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
             >
               <option value="">Select a doctor</option>
-              {doctors.map(doctor => (
+              {doctors.map((doctor) => (
                 <option key={doctor.id} value={doctor.id}>
                   Dr. {doctor.name}
                 </option>
@@ -108,7 +108,7 @@ const NewAppointment = () => {
             <input
               type="datetime-local"
               value={appointmentTime}
-              onChange={e => setAppointmentTime(e.target.value)}
+              onChange={(e) => setAppointmentTime(e.target.value)}
               className="w-full bg-gray-700 text-white p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
             />
           </div>

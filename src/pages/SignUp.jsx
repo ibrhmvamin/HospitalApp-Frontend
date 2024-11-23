@@ -260,6 +260,8 @@ const SignUp = () => {
             Get Started
           </button>
         </form>
+
+        <p className="mt-8 text-sm text-gray-500">@DocLink copyright</p>
         <p>
           Already have an account? Click{" "}
           <Link

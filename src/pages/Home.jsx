@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import ChatWindow from "../components/ChatWindow";
 import { Link, useNavigate } from "react-router-dom";
 import useAuthStore from "../zustand/authStore";
 import axios from "axios";
@@ -11,13 +10,21 @@ import toast from "react-hot-toast";
 import { HubConnectionBuilder } from "@microsoft/signalr";
 
 const Home = () => {
-  const [openChats, setOpenChats] = useState([]);
   const [appointments, setAppointments] = useState([]);
   const [role, setRole] = useState("");
   const [connection, setConnection] = useState(null);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false); // Dropdown state
 
   const { token, logout } = useAuthStore();
   const navigate = useNavigate();
+
+  const toggleSettings = () => {
+    setIsSettingsOpen((prev) => !prev);
+  };
+
+  useEffect(() => {
+    if (role === "admin") navigate("/admin");
+  }, [role]);
 
   useEffect(() => {
     if (!token) {
@@ -78,16 +85,6 @@ const Home = () => {
     getAppointments();
   }, [token]);
 
-  const handleOpenChat = (doctor) => {
-    if (!openChats.includes(doctor)) {
-      setOpenChats([...openChats, doctor]);
-    }
-  };
-
-  const handleCloseChat = (doctor) => {
-    setOpenChats(openChats.filter((chat) => chat !== doctor));
-  };
-
   const handleLogout = () => {
     logout();
     navigate("/login");
@@ -132,13 +129,6 @@ const Home = () => {
             + New Appointment
           </Link>
         )}
-
-        <button
-          onClick={handleLogout}
-          className="bg-red-500 w-full py-2 text-lg rounded transition-all hover:bg-red-700"
-        >
-          Log Out
-        </button>
 
         <div className="space-y-4 mt-8">
           {appointments.map((appointment) => (
@@ -240,12 +230,40 @@ const Home = () => {
           ))}
         </div>
       </div>
+      <div className="fixed top-4 right-4">
+        <button
+          onClick={toggleSettings}
+          className="bg-blue-500 p-3 rounded-full hover:bg-blue-700 transition"
+        >
+          ⚙️
+        </button>
 
-      {/* Chat Windows */}
-      <div className="fixed bottom-0 right-0 flex space-x-4 p-4">
-        {openChats.map((doctor) => (
-          <ChatWindow key={doctor} doctor={doctor} onClose={handleCloseChat} />
-        ))}
+        {/* Dropdown Menu */}
+        {isSettingsOpen && (
+          <div className="absolute right-0 mt-2 w-40 bg-white-800 rounded shadow-lg">
+            <Link
+              to="/profile"
+              className="block w-full text-left px-4 py-2 bg-white transition"
+            >
+              My Profile
+            </Link>
+            <button
+              onClick={handleLogout}
+              className="block w-full text-left px-4 py-2 bg-white transition"
+            >
+              Log Out
+            </button>
+          </div>
+        )}
+      </div>
+      <div></div>
+      <div className="fixed my-6 bottom-6 right-6">
+        <Link
+          to="/doctors-chat"
+          className="bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition"
+        >
+          💬 Chat
+        </Link>
       </div>
     </div>
   );

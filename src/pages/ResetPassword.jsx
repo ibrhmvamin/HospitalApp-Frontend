@@ -14,7 +14,7 @@ const ResetPassword = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   // Handle input changes
-  const handleChange = e => {
+  const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -41,7 +41,7 @@ const ResetPassword = () => {
   };
 
   // Handle form submission
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
