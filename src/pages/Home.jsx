@@ -116,9 +116,9 @@ const Home = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-screen bg-gray-900">
+    <div className="flex flex-col md:flex-row min-h-screen bg-gray-900">
       {/* Sidebar */}
-      <div className="w-full md:w-1/4 bg-gray-800 text-white p-6">
+      <div className="w-full md:w-1/4 bg-gray-800 text-white p-6 flex-shrink-0">
         <h1 className="text-3xl font-bold mb-8">Hospital App</h1>
 
         {role === "member" && (
@@ -130,7 +130,7 @@ const Home = () => {
           </Link>
         )}
 
-        <div className="space-y-4 mt-8">
+        <div className="space-y-4 overflow-auto max-h-[80vh]">
           {appointments.map((appointment) => (
             <div key={appointment.id} className="bg-gray-700 p-4 rounded-lg">
               <p>
@@ -199,7 +199,7 @@ const Home = () => {
       </div>
 
       {/* Main Content */}
-      <div className="w-full md:w-3/4 p-6 bg-gray-900 text-white">
+      <div className="w-full md:w-3/4 p-6 bg-gray-900 text-white overflow-y-auto flex-grow">
         <h2 className="text-2xl font-bold mb-6">Your Appointments</h2>
         <div className="space-y-4">
           {appointments.map((appointment) => (

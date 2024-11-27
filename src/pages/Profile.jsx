@@ -17,6 +17,10 @@ const Profile = () => {
 
   const { token } = useAuthStore();
   const navigate = useNavigate();
+  const formatDateForInput = (dateString) => {
+    const [day, month, year] = dateString.split(" ")[0].split("-");
+    return `${year}-${month}-${day}`;
+  };
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -38,7 +42,6 @@ const Profile = () => {
             },
           }
         );
-        console.log("user.profile", user);
 
         setUser({
           name: data.name || "",
@@ -46,7 +49,7 @@ const Profile = () => {
           email: data.email || "",
           profile: data.profile || "",
           description: data.description || "",
-          birthDate: data.birthDate ? data.birthDate.split("T")[0] : "",
+          birthDate: data.birthDate ? formatDateForInput(data.birthDate) : "",
           role: data.role || "",
         });
       } catch (error) {

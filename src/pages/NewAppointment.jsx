@@ -47,8 +47,10 @@ const NewAppointment = () => {
       return;
     }
 
+    const formattedTime = formatDateTime(appointmentTime);
+
     const appointmentData = {
-      startTime: appointmentTime, // Use the ISO 8601 format from the datetime-local input
+      startTime: formattedTime, // Use the ISO 8601 format from the datetime-local input
       doctorId: selectedDoctorId,
     };
 
