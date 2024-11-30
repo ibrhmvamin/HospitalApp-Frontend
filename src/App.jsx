@@ -14,8 +14,8 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Admin from "./pages/Admin";
 import AddDoctor from "./pages/AddDoctor";
-import EditModal from "./pages/EditModal";
-import ChatWindow from "./components/ChatWindow";
+import EditDoctor from "./pages/EditDoctor";
+import EditUser from "./pages/EditUser";
 import DoctorList from "./pages/DoctorList";
 
 function App() {
@@ -52,8 +52,9 @@ function App() {
         <Route path="/profile" Component={Profile} />
         <Route path="/admin" Component={Admin} />
         <Route path="/add-doctor" Component={AddDoctor} />
-        <Route path="/update-modal" Component={EditModal} />
-        <Route path="/doctors-chat" Component={DoctorList} />
+        <Route path="/chat" Component={DoctorList} />
+        <Route path="/edit-doctor/:id" element={<EditDoctor />} />
+        <Route path="/edit-user/:id" element={<EditUser />} />
       </Routes>
       <Toaster />
     </>

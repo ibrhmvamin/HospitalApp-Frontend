@@ -85,6 +85,12 @@ const Home = () => {
     getAppointments();
   }, [token]);
 
+  const handleOpenChat = () => {
+    if (!token) {
+      navigate("/chat");
+    }
+  };
+
   const handleLogout = () => {
     logout();
     navigate("/login");
@@ -140,7 +146,6 @@ const Home = () => {
                 <strong>Time:</strong> {formatDate(appointment.startTime).time}{" "}
                 - {formatDate(appointment.endTime).time}
               </p>
-              {console.log(appointment.startTime)}
               <p>
                 <strong>Status:</strong>{" "}
                 {capitalizeFirstLetter(appointment.status)}
@@ -181,17 +186,13 @@ const Home = () => {
 
               {role === "member" &&
                 getDate(appointment.startTime) > new Date() && (
-                  <button
-                    className="mt-2 bg-blue-500 text-white py-1 px-4 rounded hover:bg-blue-700"
-                    onClick={() =>
-                      handleOpenChat(
-                        `${appointment.doctorName} ${appointment.doctorSurname}`
-                      )
-                    }
+                  <Link
+                    to="/chat"
+                    className="inline-block text-center transition-all bg-blue-500 w-full p-1 mt-2 text-lg rounded hover:bg-blue-700"
                   >
                     Chat with {appointment.doctorName}{" "}
                     {appointment.doctorSurname}
-                  </button>
+                  </Link>
                 )}
             </div>
           ))}
@@ -259,7 +260,7 @@ const Home = () => {
       <div></div>
       <div className="fixed my-6 bottom-6 right-6">
         <Link
-          to="/doctors-chat"
+          to="/chat"
           className="bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition"
         >
           💬 Chat

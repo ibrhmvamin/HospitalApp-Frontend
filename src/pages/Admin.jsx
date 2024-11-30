@@ -10,11 +10,9 @@ const Admin = () => {
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingUsers, setIsLoadingUsers] = useState(false);
-  const [currentEdit, setCurrentEdit] = useState(null);
-  const [showEditModal, setShowEditModal] = useState(false);
 
   const { token, logout } = useAuthStore();
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false); // Dropdown state
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const navigate = useNavigate();
 
   const toggleSettings = () => {
@@ -31,7 +29,6 @@ const Admin = () => {
     if (userRole !== "admin") return navigate("/");
   }, [token]);
 
-  // Fetch doctors from the API
   const fetchDoctors = async () => {
     try {
       setIsLoading(true);
@@ -71,18 +68,14 @@ const Admin = () => {
     fetchUsers();
   }, []);
 
-  // Edit a doctor
   const handleEditDoctor = (doctor) => {
-    setCurrentEdit(doctor);
-    setShowEditModal(true);
+    navigate(`/edit-doctor/${doctor.id}`, { state: doctor });
   };
 
   const handleEditUser = (user) => {
-    setCurrentEdit(user);
-    setShowEditModal(true);
+    navigate(`/edit-user/${user.id}`, { state: user });
   };
 
-  // Delete a doctor
   const handleDeleteDoctor = async (doctorId) => {
     if (window.confirm("Are you sure you want to delete this doctor?")) {
       try {
@@ -105,11 +98,14 @@ const Admin = () => {
   const handleDeleteUser = async (userId) => {
     if (window.confirm("Are you sure you want to delete this user?")) {
       try {
-        await axios.delete(`http://localhost:5274/api/user/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        await axios.delete(
+          `http://localhost:5274/api/user/patients/${userId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         toast.success("User deleted successfully");
         setUsers(users.filter((user) => user.id !== userId));
       } catch (error) {
@@ -132,7 +128,13 @@ const Admin = () => {
 
           {/* Dropdown Menu */}
           {isSettingsOpen && (
-            <div className="absolute right-0 mt-2 w-40 bg-white-800 rounded shadow-lg">
+            <div
+              className={`absolute right-0 mt-2 w-40 bg-white rounded shadow-lg transform origin-top transition-all duration-300 ${
+                isSettingsOpen
+                  ? "scale-y-100 opacity-100"
+                  : "scale-y-0 opacity-0 pointer-events-none"
+              }`}
+            >
               <Link
                 to="/profile"
                 className="block w-full text-left px-4 py-2 bg-white transition"
@@ -181,20 +183,23 @@ const Admin = () => {
                 </h2>
                 <p className="text-gray-400">Email: {doctor.email}</p>
                 {/* <div className="mt-4 text-gray-300">
-                <p>
-                  Accepted Appointments:{" "}
-                  {doctor.statuses.filter((s) => s === "ACCEPTED").length || ""}
-                </p>
-                <p>
-                  Pending Appointments:{" "}
-                  {doctor.statuses.filter((s) => s === "PENDING").length || ""}
-                </p>
-                <p>
-                  Rejected Appointments:{" "}
-                  {doctor.statuses.filter((s) => s === "REJECTED").length || ""}
-                </p>
-                <p>Total Appointments: {doctor.statuses.length}</p>
-              </div> */}
+                  <p>
+                    Accepted Appointments:{" "}
+                    {doctor.statuses.filter((s) => s === "ACCEPTED").length ||
+                      ""}
+                  </p>
+                  <p>
+                    Pending Appointments:{" "}
+                    {doctor.statuses.filter((s) => s === "PENDING").length ||
+                      ""}
+                  </p>
+                  <p>
+                    Rejected Appointments:{" "}
+                    {doctor.statuses.filter((s) => s === "REJECTED").length ||
+                      ""}
+                  </p>
+                  <p>Total Appointments: {doctor.statuses.length}</p>
+                </div> */}
                 <div className="flex justify-around mt-6">
                   <button
                     onClick={() => handleEditDoctor(doctor)}

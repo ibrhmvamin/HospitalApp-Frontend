@@ -5,18 +5,32 @@ import ChatWindow from "../components/ChatWindow";
 import useAuthStore from "../zustand/authStore";
 
 const DoctorList = () => {
-  const [users, setUsers] = useState([]); // Generic 'users' array for doctors or patients
+  const [users, setUsers] = useState([]);
   const [role, setRole] = useState("");
-  const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null);
   const { token } = useAuthStore();
 
+  // Decode the token and set the role
   useEffect(() => {
-    const fetchDoctors = async () => {
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      const userRole =
+        decodedToken[
+          "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+        ];
+      setRole(userRole);
+    }
+  }, [token]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      if (!role) return;
+
       try {
         const endpoint =
           role === "doctor"
             ? "http://localhost:5274/api/User/patients" // Fetch patients if the user is a doctor
-            : "http://localhost:5274/api/User/doctors"; // Fetch doctors if the user is a patient
+            : "http://localhost:5274/api/User/doctors"; // Fetch doctors if the user is a member (patient)
 
         const response = await axios.get(endpoint, {
           headers: { Authorization: `Bearer ${token}` },
@@ -26,15 +40,9 @@ const DoctorList = () => {
         console.error("Error fetching users:", error);
       }
     };
-    fetchDoctors();
-  }, [token]);
 
-  const decodedToken = jwtDecode(token);
-  const userRole =
-    decodedToken[
-      "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
-    ];
-  setRole(userRole);
+    fetchUsers();
+  }, [role, token]); // Fetch users when the role or token changes
 
   return (
     <div className="min-h-screen flex bg-gray-900">
