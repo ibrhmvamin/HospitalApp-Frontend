@@ -3,6 +3,7 @@ import { HubConnectionBuilder } from "@microsoft/signalr";
 import useAuthStore from "../zustand/authStore";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 
 const ChatWindow = ({ selectedDoctor, selectedPatient }) => {
   const [messages, setMessages] = useState([]);
@@ -13,6 +14,12 @@ const ChatWindow = ({ selectedDoctor, selectedPatient }) => {
   const [hubConnection, setHubConnection] = useState(null);
   const navigate = useNavigate();
 
+  const currentUser = jwtDecode(token); // Decode the JWT token
+  const currentUserId =
+    currentUser[
+      "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+    ];
+
   useEffect(() => {
     if (!token) navigate("/");
 
@@ -22,6 +29,25 @@ const ChatWindow = ({ selectedDoctor, selectedPatient }) => {
         "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
       ];
     setRole(userRole);
+
+    const loadMessages = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5274/api/Room/messages",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const sortedMessages = response.data.sort(
+          (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+        );
+        setMessages(sortedMessages);
+      } catch (err) {
+        console.error("Failed to load messages:", err);
+      }
+    };
+
+    loadMessages();
 
     const connection = new HubConnectionBuilder()
       .withUrl("http://localhost:5274/appointmentHub", {
@@ -38,7 +64,7 @@ const ChatWindow = ({ selectedDoctor, selectedPatient }) => {
     connection.on("ReceiveMessage", (message, senderId) => {
       setMessages((prevMessages) => [
         ...prevMessages,
-        { content: message, sender: senderId },
+        { content: message, senderId: senderId },
       ]);
     });
 
@@ -52,15 +78,30 @@ const ChatWindow = ({ selectedDoctor, selectedPatient }) => {
   const recipient = role === "doctor" ? selectedPatient : selectedDoctor;
 
   const sendMessage = async () => {
-    if (!newMessage.trim() || !recipient?.id) return;
+    if (!newMessage.trim() || !recipient?.id) {
+      setError("Please type a message and select a recipient.");
+      return;
+    }
 
     try {
       if (hubConnection) {
-        await hubConnection.invoke("SendMessage", newMessage, recipient.id);
+        // Use currentUserId as senderId
+        await hubConnection.invoke(
+          "SendMessage",
+          currentUserId,
+          recipient.id,
+          newMessage
+        );
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { content: newMessage, senderId: currentUserId },
+        ]);
         setNewMessage("");
+        setError("");
       }
     } catch (err) {
       setError("Failed to send message");
+      console.error("SendMessage error:", err);
     }
   };
 
@@ -80,12 +121,12 @@ const ChatWindow = ({ selectedDoctor, selectedPatient }) => {
           <div
             key={index}
             className={`mb-2 ${
-              msg.sender === token ? "text-right" : "text-left"
+              msg.senderId === currentUserId ? "text-right" : "text-left"
             }`}
           >
             <div
               className={`inline-block p-2 rounded-lg ${
-                msg.sender === token ? "bg-blue-600" : "bg-gray-600"
+                msg.senderId === currentUserId ? "bg-blue-600" : "bg-gray-600"
               }`}
             >
               <span>{msg.content}</span>
