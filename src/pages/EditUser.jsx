@@ -147,7 +147,7 @@ const EditUser = () => {
         <div className="mb-4">
           <label className="block text-gray-400 mb-2">Birth Date</label>
           <input
-            type="datetime"
+            type="date"
             name="birthDate"
             value={userData.birthDate}
             onChange={handleChange}

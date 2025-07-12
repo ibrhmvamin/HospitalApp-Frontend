@@ -22,7 +22,6 @@ const Profile = () => {
     return `${year}-${month}-${day}`;
   };
 
-  // Redirect to login if not authenticated
   useEffect(() => {
     if (!token) {
       toast.error("You are not authenticated. Redirecting to login.");
@@ -30,7 +29,6 @@ const Profile = () => {
     }
   }, [token, navigate]);
 
-  // Fetch user profile data
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -61,7 +59,6 @@ const Profile = () => {
     if (token) fetchProfile();
   }, [token]);
 
-  // Handle input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setUser((prev) => ({
@@ -70,7 +67,6 @@ const Profile = () => {
     }));
   };
 
-  // Handle save profile
   const handleSave = async () => {
     try {
       const formData = new FormData();
@@ -105,7 +101,6 @@ const Profile = () => {
     }
   };
 
-  // Handle profile image change
   const handleProfileImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {

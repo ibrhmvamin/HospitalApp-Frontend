@@ -13,8 +13,7 @@ const Home = () => {
   const [appointments, setAppointments] = useState([]);
   const [role, setRole] = useState("");
   const [connection, setConnection] = useState(null);
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false); // Dropdown state
-
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const { token, logout } = useAuthStore();
   const navigate = useNavigate();
 
@@ -241,16 +240,16 @@ const Home = () => {
 
         {/* Dropdown Menu */}
         {isSettingsOpen && (
-          <div className="absolute right-0 mt-2 w-40 bg-white-800 rounded shadow-lg">
+          <div className="absolute right-0 mt-2 w-44 bg-white rounded-xl shadow-xl ring-1 ring-black/10 z-50 transition-all duration-200">
             <Link
               to="/profile"
-              className="block w-full text-left px-4 py-2 bg-white transition"
+              className="block px-5 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition"
             >
               My Profile
             </Link>
             <button
               onClick={handleLogout}
-              className="block w-full text-left px-4 py-2 bg-white transition"
+              className="block w-full text-left px-5 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition"
             >
               Log Out
             </button>

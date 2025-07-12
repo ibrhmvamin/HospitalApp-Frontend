@@ -128,28 +128,34 @@ const Admin = () => {
 
           {/* Dropdown Menu */}
           {isSettingsOpen && (
-            <div
-              className={`absolute right-0 mt-2 w-40 bg-white rounded shadow-lg transform origin-top transition-all duration-300 ${
-                isSettingsOpen
-                  ? "scale-y-100 opacity-100"
-                  : "scale-y-0 opacity-0 pointer-events-none"
-              }`}
-            >
+            <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl ring-1 ring-black/10 z-50 transition-all duration-200">
               <Link
                 to="/profile"
-                className="block w-full text-left px-4 py-2 bg-white transition"
+                className="block px-5 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition"
               >
                 My Profile
               </Link>
               <Link
                 to="/add-doctor"
-                className="block w-full text-left px-4 py-2 bg-white transition"
+                className="block px-5 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition"
               >
                 Add Doctor
               </Link>
+              <Link
+                to="/admin/users"
+                className="block px-5 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition"
+              >
+                User Management
+              </Link>
+              <Link
+                to="/admin/appointments"
+                className="block px-5 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition"
+              >
+                Appointments
+              </Link>
               <button
-                onClick={() => logout()}
-                className="block w-full text-left px-4 py-2 bg-white transition"
+                onClick={logout}
+                className="block w-full text-left px-5 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition"
               >
                 Log Out
               </button>
@@ -182,24 +188,6 @@ const Admin = () => {
                   {"Dr." + doctor.name + " " + doctor.surname}
                 </h2>
                 <p className="text-gray-400">Email: {doctor.email}</p>
-                {/* <div className="mt-4 text-gray-300">
-                  <p>
-                    Accepted Appointments:{" "}
-                    {doctor.statuses.filter((s) => s === "ACCEPTED").length ||
-                      ""}
-                  </p>
-                  <p>
-                    Pending Appointments:{" "}
-                    {doctor.statuses.filter((s) => s === "PENDING").length ||
-                      ""}
-                  </p>
-                  <p>
-                    Rejected Appointments:{" "}
-                    {doctor.statuses.filter((s) => s === "REJECTED").length ||
-                      ""}
-                  </p>
-                  <p>Total Appointments: {doctor.statuses.length}</p>
-                </div> */}
                 <div className="flex justify-around mt-6">
                   <button
                     onClick={() => handleEditDoctor(doctor)}
@@ -221,7 +209,7 @@ const Admin = () => {
         )}
         {/* Users Section */}
         <h2 className="text-2xl text-white font-bold mb-4 text-center p-10">
-          Users
+          Patients
         </h2>
         {isLoadingUsers ? (
           <p className="text-center text-white">Loading users...</p>

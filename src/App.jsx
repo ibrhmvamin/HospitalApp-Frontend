@@ -17,6 +17,9 @@ import AddDoctor from "./pages/AddDoctor";
 import EditDoctor from "./pages/EditDoctor";
 import EditUser from "./pages/EditUser";
 import DoctorList from "./pages/DoctorList";
+import AdminUserList from "./pages/AdminUserManagement";
+import AdminUserManagement from "./pages/AdminUserManagement";
+import AdminAppointments from "./pages/AdminAppointments";
 
 function App() {
   const { checkToken } = useAuthStore();
@@ -50,11 +53,13 @@ function App() {
         <Route path="/forgot-password" Component={ForgotPassword} />
         <Route path="/reset-password" Component={ResetPassword} />
         <Route path="/profile" Component={Profile} />
-        <Route path="/admin" Component={Admin} />
         <Route path="/add-doctor" Component={AddDoctor} />
         <Route path="/chat" Component={DoctorList} />
         <Route path="/edit-doctor/:id" element={<EditDoctor />} />
         <Route path="/edit-user/:id" element={<EditUser />} />
+        <Route path="/admin" Component={Admin} />
+        <Route path="/admin/users" Component={AdminUserManagement} />
+        <Route path="/admin/appointments" Component={AdminAppointments} />
       </Routes>
       <Toaster />
     </>
