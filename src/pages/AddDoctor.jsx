@@ -13,7 +13,6 @@ const AddDoctor = () => {
     name: "",
     surname: "",
     profile: null,
-    description: "",
     birthDate: "",
   });
 
@@ -33,7 +32,6 @@ const AddDoctor = () => {
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
-  // Handle input changes
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     setFormData({
@@ -42,7 +40,6 @@ const AddDoctor = () => {
     });
   };
 
-  // Validate form
   const validateForm = () => {
     const newErrors = {};
     const today = new Date();
@@ -78,10 +75,6 @@ const AddDoctor = () => {
 
     if (formData.passwordConfirm !== formData.password) {
       newErrors.passwordConfirm = "Passwords do not match";
-    }
-
-    if (formData.description.length > 200) {
-      newErrors.description = "Description cannot exceed 200 characters";
     }
 
     if (!formData.birthDate) {
@@ -240,23 +233,6 @@ const AddDoctor = () => {
             />
             {errors.birthDate && (
               <p className="text-red-500 text-sm mt-1">{errors.birthDate}</p>
-            )}
-          </div>
-
-          {/* Description */}
-          <div className="mb-4">
-            <label className="block text-gray-400 mb-1">Description</label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              className={`w-full p-3 bg-gray-700 text-white rounded-md border ${
-                errors.description ? "border-red-500" : "border-gray-600"
-              }`}
-              rows="3"
-            />
-            {errors.description && (
-              <p className="text-red-500 text-sm mt-1">{errors.description}</p>
             )}
           </div>
 

@@ -221,20 +221,6 @@ const Profile = () => {
                 className="w-full p-3 border border-gray-300 rounded focus:ring focus:ring-blue-300"
               />
             </div>
-
-            {/* Role */}
-            {/* <div>
-              <label className="block text-gray-600 font-medium mb-1">
-                Role
-              </label>
-              <input
-                type="text"
-                name="role"
-                value={user.role}
-                readOnly
-                className="w-full p-3 border border-gray-300 rounded bg-gray-100 cursor-not-allowed"
-              />
-            </div> */}
           </div>
 
           {/* Save Button */}

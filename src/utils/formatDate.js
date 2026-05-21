@@ -1,5 +1,13 @@
 const formatDate = (dateString) => {
+  if (!dateString || typeof dateString !== "string") {
+    return { date: "Invalid", time: "Invalid" };
+  }
+
   const [datePart, timePart] = dateString.split(" ");
+
+  if (!datePart || !timePart) {
+    return { date: "Invalid", time: "Invalid" };
+  }
 
   const [day, month, year] = datePart.split("-");
 

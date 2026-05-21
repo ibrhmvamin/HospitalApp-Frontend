@@ -5,6 +5,7 @@ import useAuthStore from "../zustand/authStore";
 import axios from "axios";
 import { FiSend } from "react-icons/fi";
 import { FiTrash2 } from "react-icons/fi";
+import formatDate from "../utils/formatDate";
 
 const isInChat = (m, me, them) =>
   (m.senderId === me && m.receiverId === them) ||
@@ -121,12 +122,7 @@ export default function ChatWindow({ selectedDoctor, selectedPatient }) {
               <p className="text-sm">{m.content}</p>
               <div className="flex justify-end mt-1">
                 <span className="text-[10px] text-gray-400">
-                  {new Date(m.createdAt).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: false,
-                    timeZone: "Asia/Baku",
-                  })}
+                  {/* {formatDate(m.createdAt).time} */}
                 </span>
               </div>
             </div>

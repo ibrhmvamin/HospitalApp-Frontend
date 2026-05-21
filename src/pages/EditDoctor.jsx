@@ -1,8 +1,8 @@
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import useAuthStore from "./../zustand/authStore";
+import useAuthStore from "../zustand/authStore";
 
 const EditDoctor = () => {
   const { state } = useLocation();
@@ -14,32 +14,45 @@ const EditDoctor = () => {
     name: state?.name || "",
     surname: state?.surname || "",
     email: state?.email || "",
-    profile: null,
     birthDate: state?.birthDate
       ? state.birthDate.split(" ")[0].split("-").reverse().join("-")
       : "",
+    profile: null,
+    newPassword: "",
+    confirmPassword: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setDoctorData({ ...doctorData, [name]: value });
+    setDoctorData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleFileChange = (e) => {
-    setDoctorData({ ...doctorData, profile: e.target.files[0] });
+    setDoctorData((prev) => ({ ...prev, profile: e.target.files[0] }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (
+      doctorData.newPassword &&
+      doctorData.newPassword !== doctorData.confirmPassword
+    ) {
+      toast.error("Passwords do not match");
+      return;
+    }
 
     const formData = new FormData();
     formData.append("Name", doctorData.name);
     formData.append("Surname", doctorData.surname);
     formData.append("Email", doctorData.email);
     formData.append("BirthDate", doctorData.birthDate);
-    if (doctorData.profile) {
-      formData.append("Profile", doctorData.profile);
-    }
+
+    if (doctorData.profile) formData.append("Profile", doctorData.profile);
+    if (doctorData.newPassword)
+      formData.append("NewPassword", doctorData.newPassword);
+    if (doctorData.confirmPassword)
+      formData.append("ConfirmPassword", doctorData.confirmPassword);
 
     try {
       await axios.put(
@@ -54,7 +67,8 @@ const EditDoctor = () => {
       );
       toast.success("Doctor updated successfully");
       navigate("/admin");
-    } catch (error) {
+    } catch (err) {
+      console.error(err);
       toast.error("Failed to update doctor");
     }
   };
@@ -62,11 +76,12 @@ const EditDoctor = () => {
   return (
     <div className="p-8 bg-gray-900 min-h-screen">
       <h1 className="text-3xl text-white font-bold mb-6">Edit Doctor</h1>
+
       <form
         onSubmit={handleSubmit}
         className="max-w-lg mx-auto bg-gray-800 p-6 rounded-lg shadow-md"
       >
-        {/* Name Field */}
+        {/* Name */}
         <div className="mb-4">
           <label className="block text-gray-400 mb-2">Name</label>
           <input
@@ -75,10 +90,11 @@ const EditDoctor = () => {
             value={doctorData.name}
             onChange={handleChange}
             className="w-full px-4 py-2 rounded-md bg-gray-700 text-white"
+            required
           />
         </div>
 
-        {/* Surname Field */}
+        {/* Surname */}
         <div className="mb-4">
           <label className="block text-gray-400 mb-2">Surname</label>
           <input
@@ -87,10 +103,11 @@ const EditDoctor = () => {
             value={doctorData.surname}
             onChange={handleChange}
             className="w-full px-4 py-2 rounded-md bg-gray-700 text-white"
+            required
           />
         </div>
 
-        {/* Email Field */}
+        {/* Email */}
         <div className="mb-4">
           <label className="block text-gray-400 mb-2">Email</label>
           <input
@@ -99,10 +116,11 @@ const EditDoctor = () => {
             value={doctorData.email}
             onChange={handleChange}
             className="w-full px-4 py-2 rounded-md bg-gray-700 text-white"
+            required
           />
         </div>
 
-        {/* BirthDate Field */}
+        {/* Birth Date */}
         <div className="mb-4">
           <label className="block text-gray-400 mb-2">Birth Date</label>
           <input
@@ -114,14 +132,40 @@ const EditDoctor = () => {
           />
         </div>
 
-        {/* Profile Upload Field */}
+        {/* New Password */}
         <div className="mb-4">
-          <label className="block text-gray-400 mb-2">Profile Picture</label>
+          <label className="block text-gray-400 mb-2">New Password</label>
+          <input
+            type="password"
+            name="newPassword"
+            value={doctorData.newPassword}
+            onChange={handleChange}
+            className="w-full px-4 py-2 rounded-md bg-gray-700 text-white"
+          />
+        </div>
+
+        {/* Confirm Password */}
+        <div className="mb-6">
+          <label className="block text-gray-400 mb-2">Confirm Password</label>
+          <input
+            type="password"
+            name="confirmPassword"
+            value={doctorData.confirmPassword}
+            onChange={handleChange}
+            className="w-full px-4 py-2 rounded-md bg-gray-700 text-white"
+          />
+        </div>
+
+        {/* Profile Picture */}
+        <div className="mb-4">
+          <label className="block text-gray-400 mb-2 font-medium">
+            Profile Picture
+          </label>
           <input
             type="file"
-            name="profile"
+            accept="image/*"
             onChange={handleFileChange}
-            className="w-full text-gray-400"
+            className="w-full px-4 py-2 rounded-md bg-gray-700 text-white"
           />
         </div>
 
